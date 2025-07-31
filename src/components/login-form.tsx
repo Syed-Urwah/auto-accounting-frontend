@@ -23,12 +23,14 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { login } from "@/services/auth"
 import { useEffect, useState } from "react"
+import { useRouter } from "next/router"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
 
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
   const formSchema = z.object({
@@ -56,11 +58,15 @@ export function LoginForm({
     try {
       const response = await login(values.email, values.password)
       console.log("Login response:", response)
-      localStorage.setItem("auto_accounting_access_token", response.access_token)
+      if(response.statusCode === 200) {
+        localStorage.setItem("auto_accounting_access_token", response.data.access_token)
+        router.push('/dashboard')
+      }
+
       // Handle successful login here
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login error:", error)
-      // Handle login error here
+      form.setError("root", { type: "manual", message: error.message });
     } finally {
       setIsLoading(false)
     }
@@ -152,13 +158,18 @@ export function LoginForm({
                       )}
                     />
                   </div>
+                  {form.formState.errors.root && (
+                  <p className="text-red-500 text-sm">
+                    {form.formState.errors.root.message}
+                  </p>
+                )}
                   <Button type="submit" disabled={isLoading} className="w-full">
                     {isLoading ? "Signing in..." : "Sign in"}
                   </Button>
                 </div>
                 <div className="text-center text-sm">
                   Don&apos;t have an account?{" "}
-                  <a href="#" className="underline underline-offset-4">
+                  <a href="/signup" className="underline underline-offset-4">
                     Sign up
                   </a>
                 </div>
