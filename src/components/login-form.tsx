@@ -60,7 +60,7 @@ export function LoginForm({
       console.log("Login response:", response)
       if(response.statusCode === 200) {
         localStorage.setItem("auto_accounting_access_token", response.data.access_token)
-        router.push('/dashboard')
+        router.push(`/company/${response.data.user.company.id}/dashboard`)
       }
 
       // Handle successful login here

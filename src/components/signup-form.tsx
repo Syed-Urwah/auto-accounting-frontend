@@ -28,6 +28,8 @@ const formSchema = z.object({
   username: z.string().min(2, { message: "Username must be at least 2 characters." }),
   email: z.string().email(),
   password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+  companyName: z.string().nonempty({ message: "Company name is required." }),
+  companyAddress: z.string().nonempty({ message: "Company address is required." }),
 });
 
 export function SignupForm({
@@ -42,6 +44,8 @@ export function SignupForm({
     defaultValues: {
       username: "",
       email: "",
+      companyName: "",
+      companyAddress: "",
       password: "",
     },
   });
@@ -49,7 +53,13 @@ export function SignupForm({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      const response = await signup(values.username, values.email, values.password);
+      const response = await signup({
+        username: values.username,
+        email: values.email,
+        password: values.password,
+        companyName: values.companyName,
+        companyAddress: values.companyAddress,
+      });
       if(response.statusCode === 201){
         console.log("redirect to login page");
         router.push('/login')
@@ -95,6 +105,32 @@ export function SignupForm({
                       <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input placeholder="m@example.com" {...field} disabled={isLoading} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="companyName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Company Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="ABC Company" {...field} disabled={isLoading} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="companyAddress"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Company Address</FormLabel>
+                      <FormControl>
+                        <Input placeholder="123 main street" {...field} disabled={isLoading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

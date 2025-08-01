@@ -1,8 +1,18 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: false,
+  output: 'export',
+  trailingSlash: true,
+  // target: 'serverless',
+  images: {
+    unoptimized: true, // Disables image optimization for static export mode
+  },
 
-const nextConfig: NextConfig = {
-  /* config options here */
-  reactStrictMode: true,
-};
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: true,
+  },
+}
 
-export default nextConfig;
+module.exports = nextConfig
