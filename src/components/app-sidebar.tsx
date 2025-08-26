@@ -134,6 +134,25 @@ const data = {
         },
       ],
     },
+    {
+      title: "Accounting",
+      url: "#",
+      icon: BookOpen,
+      items: [
+        {
+          title: "General Journal",
+          url: "/accounting/general-journal",
+        },
+        {
+          title: "Trial Balance",
+          url: "/accounting/trial-balance",
+        },
+        {
+          title: "Upload Entries",
+          url: "/accounting/upload-entries",
+        },
+      ],
+    },
   ],
   projects: [
     {
