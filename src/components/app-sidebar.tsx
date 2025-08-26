@@ -170,7 +170,7 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: userData } = useQuery({ queryKey: ["user"] })
+  const { data: userData }: any = useQuery({ queryKey: ["user"] })
 
   const navMain = data.navMain.map((item) => {
     if (item.title === "Accounting" && userData?.company?.id) {

@@ -1,8 +1,10 @@
-import Dashboard from '@/components/dashboard'
-import React from 'react'
+import Dashboard from "@/components/dashboard";
+import { MainLayout } from "@/components/layouts/main-layout";
 
-export default function index() {
+export default function DashboardPage() {
   return (
-    <Dashboard/>
-  )
+    <MainLayout>
+      <Dashboard />
+    </MainLayout>
+  );
 }
