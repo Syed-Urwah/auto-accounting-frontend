@@ -11,6 +11,7 @@ import {
   Settings2,
   SquareTerminal,
 } from "lucide-react"
+import { useQuery } from "@tanstack/react-query"
 
 import { NavMain } from "@/components/nav-main"
 import { NavProjects } from "@/components/nav-projects"
@@ -26,11 +27,6 @@ import {
 
 // This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   teams: [
     {
       name: "Acme Inc",
@@ -174,17 +170,32 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: userData } = useQuery({ queryKey: ["user"] })
+
+  const navMain = data.navMain.map((item) => {
+    if (item.title === "Accounting" && userData?.company?.id) {
+      return {
+        ...item,
+        items: item.items?.map((subItem) => ({
+          ...subItem,
+          url: `/company/${userData.company.id}${subItem.url}`,
+        })),
+      }
+    }
+    return item
+  })
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navMain} />
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {userData && <NavUser user={userData} />}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
