@@ -1,4 +1,6 @@
+
 import { NextPage } from "next";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -14,6 +16,39 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 const UploadEntriesPage: NextPage = () => {
+  const [extractedText, setExtractedText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch(`${API_URL}/ocr/image`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Extracted text:", data);
+        setExtractedText(data.data.text);
+      } else {
+        console.error("Error uploading image");
+      }
+    } catch (error) {
+      console.error("Error uploading image", error);
+    }
+    setIsLoading(false);
+  };
+
   return (
     <MainLayout>
       <Card>
@@ -31,21 +66,17 @@ const UploadEntriesPage: NextPage = () => {
             </TabsList>
             <TabsContent value="text">
               <div className="grid w-full gap-4 pt-4">
-                <Textarea placeholder="e.g., Paid $500 for office rent" />
-                <div className="w-fit py-1">
-                  <Button>Generate Entries</Button>
-                </div>
+                <Textarea placeholder="e.g., Paid $500 for office rent" value={extractedText} onChange={(e) => setExtractedText(e.target.value)} />
+                <Button>Generate Entries</Button>
               </div>
             </TabsContent>
             <TabsContent value="image">
               <div className="grid w-full gap-4 pt-4">
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="picture">Picture</Label>
-                  <Input id="picture" type="file" />
+                  <Input id="picture" type="file" onChange={handleImageUpload} />
                 </div>
-                <div className="w-fit py-1">
-                  <Button>Extract Text</Button>
-                </div>
+                {isLoading && <p>Extracting text...</p>}
               </div>
             </TabsContent>
           </Tabs>
