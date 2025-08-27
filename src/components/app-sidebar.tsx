@@ -140,8 +140,28 @@ const data = {
           url: "/accounting/general-journal",
         },
         {
+          title: "Accounts Receivable",
+          url: "/accounting/accounts-receivable",
+        },
+        {
+          title: "Accounts Payable",
+          url: "/accounting/accounts-payable",
+        },
+        {
           title: "Trial Balance",
           url: "/accounting/trial-balance",
+        },
+        {
+          title: "Balance Sheet",
+          url: "/accounting/balance-sheet",
+        },
+        {
+          title: "Income Statement",
+          url: "/accounting/income-statement",
+        },
+        {
+          title: "Cash Flow Statement",
+          url: "/accounting/cash-flow-statement",
         },
         {
           title: "Upload Entries",
