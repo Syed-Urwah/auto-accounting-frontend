@@ -24,7 +24,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { login } from "@/services/auth"
 import { useEffect } from "react"
 import { useRouter } from "next/router"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useUser } from "@/contexts/user-provider";
 
 export function LoginForm({
   className,
@@ -32,7 +33,8 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
 
   const router = useRouter()
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
+  const { login: loginUser } = useUser();
 
   const formSchema = z.object({
     email: z.email("Please enter a valid email"),
@@ -52,9 +54,10 @@ export function LoginForm({
   const mutation = useMutation({
     mutationFn: ({ email, password }: z.infer<typeof formSchema>) => login(email, password),
     onSuccess: (data) => {
-      queryClient.setQueryData(["user"], data.data.user)
-      localStorage.setItem("auto_accounting_access_token", data.data.access_token)
-      router.push(`/company/${data.data.user.company.id}/dashboard`)
+      queryClient.setQueryData(["user"], data.data.user);
+      loginUser(data.data.user);
+      localStorage.setItem("auto_accounting_access_token", data.data.access_token);
+      router.push(`/company/${data.data.user.company.id}/dashboard`);
     },
     onError: (error: any) => {
       form.setError("root", { type: "manual", message: error.message });

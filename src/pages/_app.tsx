@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { LoginGuard } from "@/components/guard/route-guard";
+import { UserProvider } from "@/contexts/user-provider";
 
 const QueryProvider = dynamic(
   () => import("@/components/query-provider").then((res) => res.QueryProvider),
@@ -19,10 +20,12 @@ const ReactQueryDevtools = dynamic(
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryProvider>
-      <LoginGuard>
-        <Component {...pageProps} />
-      </LoginGuard>
-      <ReactQueryDevtools initialIsOpen={false} />
+      <UserProvider>
+        <LoginGuard>
+          <Component {...pageProps} />
+        </LoginGuard>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </UserProvider>
     </QueryProvider>
   );
 }

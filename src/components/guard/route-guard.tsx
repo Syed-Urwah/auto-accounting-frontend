@@ -1,11 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { useUser } from "@/contexts/user-provider";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 const protectedRoutes = ["/company"];
+const publicRoutes = ["/login", "/signup"];
 
 export function LoginGuard({ children }: { children: React.ReactNode }) {
-  const { data: user, isLoading } = useQuery({ queryKey: ["user"] });
+  const { user, loading } = useUser();
   const router = useRouter();
 
   useEffect(() => {
@@ -13,16 +14,24 @@ export function LoginGuard({ children }: { children: React.ReactNode }) {
       router.pathname.startsWith(route)
     );
 
-    if (!isLoading && !user && isProtectedRoute) {
+    const isPublicRoute = publicRoutes.some((route) =>
+      router.pathname.startsWith(route)
+    );
+
+    if (!loading && !user && isProtectedRoute) {
       router.push("/login");
     }
-  }, [isLoading, user, router]);
+
+    if (user && isPublicRoute) {
+      router.push(`/company/${user.company.id}/dashboard`);
+    }
+  }, [loading, user, router]);
 
   const isProtectedRoute = protectedRoutes.some((route) =>
     router.pathname.startsWith(route)
   );
 
-  if (isLoading && isProtectedRoute) {
+  if (loading && isProtectedRoute) {
     return <div>Loading...</div>; // Or a proper loading spinner
   }
 
