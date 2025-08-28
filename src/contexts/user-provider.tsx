@@ -60,6 +60,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('aa.user');
+    localStorage.removeItem('auto_accounting_access_token');
   };
 
   const value = {

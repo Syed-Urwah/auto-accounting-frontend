@@ -24,6 +24,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { useUser } from "@/contexts/user-provider"
 
 // This is sample data.
 const data = {
@@ -190,7 +191,9 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: userData }: any = useQuery({ queryKey: ["user"] })
+  // const { data: userData }: any = useQuery({ queryKey: ["user"] })
+    const { user: userData } = useUser();
+  
 
   const navMain = data.navMain.map((item) => {
     if (item.title === "Accounting" && userData?.company?.id) {
