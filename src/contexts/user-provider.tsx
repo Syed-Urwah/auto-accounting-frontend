@@ -48,7 +48,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     if (user) {
       const updatedUser = { ...user, ...newUserInfo };
       setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
+      localStorage.setItem('aa.user', JSON.stringify(updatedUser));
     }
   };
 
